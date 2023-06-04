@@ -22,6 +22,42 @@ class _LoginScreenState extends State<LoginScreen> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPasswordController = TextEditingController();
 
+  var userData;
+
+  @override
+  void initState() {
+    // checkLoginStatus();
+    _getUserInfo();
+
+    //listenNotifications();
+    super.initState();
+  }
+
+  checkLoginStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
+  }
+
+  checkProfileStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
+  }
+
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson!);
+    setState(() {
+      userData = user;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -44,9 +80,8 @@ class _LoginScreenState extends State<LoginScreen> {
                   height: 18,
                 ),
 
-
                 Image.asset('assets/calogo.png'),
-              
+
                 const Center(
                   child: Text(
                     'CALORIE COUNTER',
@@ -61,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //   'Accounting Tool',
                 //   style: Theme.of(context).textTheme.headline5,
                 // ),
-              
+
                 // Text(
                 //   'For Small Business',
                 //   style: Theme.of(context).textTheme.titleSmall,
@@ -79,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 16,
                 ),
-              
+
                 // CustomInputField(
                 //   controller: userNumberController,
                 //   keyboardType: TextInputType.number,
@@ -87,7 +122,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //   textInputAction: TextInputAction.next,
                 // ),
                 // // _contentServices(context),
-              
+
                 // TextField(
                 //   decoration: new InputDecoration(labelText: "Enter your number"),
                 //   keyboardType: TextInputType.number,
@@ -95,7 +130,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 //     FilteringTextInputFormatter.digitsOnly
                 //   ], // Only numbers can be entered
                 // ),
-              
+
                 Form(
                   key: _formKey,
                   child: Column(
@@ -125,12 +160,9 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
-              
-              
                       const SizedBox(
                         height: 30,
                       ),
-              
                       TextFormField(
                         controller: userPasswordController,
                         obscureText: true,
@@ -160,11 +192,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                 ),
-              
+
                 const SizedBox(
                   height: 30,
                 ),
-              
+
                 MaterialButton(
                   elevation: 0,
                   color: Colors.green,
@@ -187,16 +219,16 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
-              
+
                 // const SizedBox(
                 //   height: 200,
                 // ),
-              
+
                 // _contentOverView(),
                 // const SizedBox(
                 //   height: 30,
                 // ),
-              
+
                 const SizedBox(
                   height: 30,
                 ),
@@ -251,8 +283,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-
-                
               ],
             ),
           ),
@@ -271,7 +301,6 @@ class _LoginScreenState extends State<LoginScreen> {
       return null;
     }
   }
-
 
   String? validateUsername(String? value) {
 // Indian Mobile number are of 10 digit only
@@ -298,6 +327,26 @@ class _LoginScreenState extends State<LoginScreen> {
       _login();
     }
   }
+
+  // fetchProfileData(context) async {
+  //   print(" Inside Profile function");
+
+  //   var res = await CallApi()
+  //       .authenticatedGetRequest('profile?user_id=${user_id}');
+
+  //   print(res);
+  //   if (res != null) {
+  //     // print(res.body);
+
+  //     var profileListItensJson = json.decode(res.body);
+  //     print(profileListItensJson);
+  //     return [];
+  //   } else {
+  //     return [];
+  //   }
+  // }
+
+  var user_id;
 
   void _login() async {
     // setState(() {
@@ -338,20 +387,23 @@ class _LoginScreenState extends State<LoginScreen> {
         // localStorage.setString("token", body['token']);
         localStorage.setString("user", json.encode(body['user']));
         localStorage.setString("token", json.encode(body['tokens']['access']));
-        localStorage.setString("profile", json.encode(body['profile']));
+        localStorage.setString("profile", json.encode(body['profile_data']));
         // localStorage.setString("phone_number", userNumberController.text);
 
-        // setState(() {
-        //   _isLoading = false;
-        // });
-        if(json.encode(body['profile']).isEmpty){
+        setState(() {
+          user_id = body['user']['id'];
+        });
+        if (body['profile'] == false) {
           Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const ProfileFormScreen()));
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const ProfileFormScreen()));
+        } else if (body['profile'] == true) {
+          // setState(() {});
+          // fetchProfileData(context);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (context) => const NavigatorWidget()));
         }
-
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const NavigatorWidget()));
-        
       } else if (res.statusCode == 400) {
         print('hhh');
         // setState(() {
@@ -366,9 +418,6 @@ class _LoginScreenState extends State<LoginScreen> {
 }
 
 // **************** Login Ends here ***************************
-
-
-
 
 // **************** Register starts here ***************************
 
@@ -386,7 +435,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   TextEditingController userEmailController = TextEditingController();
   TextEditingController userPhoneController = TextEditingController();
   TextEditingController userPasswordController = TextEditingController();
-  
 
   void _submit() {
     if (_formKey.currentState!.validate()) {
@@ -395,8 +443,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       _register();
     }
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -421,7 +467,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
 
                 Image.asset('assets/calogo.png'),
-              
+
                 const Center(
                   child: Text(
                     'CALORIE COUNTER',
@@ -559,7 +605,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           ),
                         ),
                       ),
-
                       const SizedBox(
                         height: 30,
                       ),
@@ -595,9 +640,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 const SizedBox(
                   height: 30,
                 ),
-
-                
-                
 
                 Center(
                   child: MaterialButton(
@@ -727,7 +769,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 // Indian Mobile number are of 10 digit only
     if (value!.isEmpty) {
       return 'Password Field must not be empty';
-    } else if(value.length < 8) 
+    } else if (value.length < 8)
       return 'Password must be of 8 or more digit';
     else
       return null;
@@ -748,9 +790,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     // }
     // var cellphone = code + number;
 
-
-
-
 // *******************************************************
     var data = {
       'username': userNameController.text,
@@ -758,8 +797,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'password': userPasswordController.text,
       'phone': userPhoneController.text,
       // 'type': 'driver',
-      
-    };  
+    };
 
     print(data);
 
@@ -785,9 +823,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
         //   _isLoading = false;
         // });
 
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else if (res.statusCode == 400) {
         print('hhh');
         // setState(() {

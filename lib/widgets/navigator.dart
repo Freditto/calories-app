@@ -42,6 +42,14 @@ class _NavigatorWidgetState extends State<NavigatorWidget> {
     }
   }
 
+  checkProfileStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
+  }
+
   void _getUserInfo() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
     var userJson = localStorage.getString('user');

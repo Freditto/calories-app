@@ -136,7 +136,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
 // *******************************************************
     var data = {
-      'user': userData['id'].toString(),
+      'user': userData['id'],
       'gender': genderStatus,
       'goal': goalStatus,
       'age': int.parse(ageController.text),
@@ -173,7 +173,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         // });
 
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+            context, MaterialPageRoute(builder: (context) => const NavigatorWidget()));
       } else if (res.statusCode == 400) {
         print('hhh');
         // setState(() {

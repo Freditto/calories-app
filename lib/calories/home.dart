@@ -1,8 +1,13 @@
+import 'dart:convert';
+
+import 'package:calorie_calculator/api/api.dart';
+import 'package:calorie_calculator/auth.dart';
 import 'package:calorie_calculator/calories/chart.dart';
 import 'package:calorie_calculator/profile/profile.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 import 'package:intl/intl.dart';
 
@@ -14,6 +19,58 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  var userData, profileData;
+
+  @override
+  void initState() {
+    checkLoginStatus();
+    _getUserInfo();
+
+    fetchFood(context);
+    //listenNotifications();
+    recommendationCalories(context);
+    recommendationExercise(context);
+
+    _getProfileInfo();
+    super.initState();
+  }
+
+  checkLoginStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
+  }
+
+  checkProfileStatus() async {
+    SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+    if (sharedPreferences.getString("token") == null) {
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => const LoginScreen()));
+    }
+  }
+
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson!);
+    setState(() {
+      userData = user;
+    });
+  }
+
+  void _getProfileInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var profileJson = localStorage.getString('profile');
+    var profile = json.decode(profileJson!);
+    setState(() {
+      profileData = profile;
+    });
+
+    print(profileData);
+  }
+
   List<String> brealFastMeals = [
     "Not relevant",
     "Illegal",
@@ -65,8 +122,6 @@ class _HomeScreenState extends State<HomeScreen> {
       builder: (BuildContext context) {
         return Container(
           height: 200,
-         
-        
           child: DropdownSearch<String>.multiSelection(
             items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
             popupProps: PopupPropsMultiSelection.menu(
@@ -134,6 +189,100 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           );
         });
+  }
+
+  // List<String> foodItems = [];
+
+  Future<List<String>> fetchFood(context) async {
+    print(" Inside List of food function");
+
+    var res = await CallApi().authenticatedGetRequest('food');
+
+    // print(res);
+    if (res != null) {
+      print("==========");
+      // print(res.body);
+      List<String> foodItems = [];
+      var b = json.decode(res.body);
+      print(b.runtimeType);
+      for (var data in b) {
+        print('----');
+        foodItems.add(data['name']);
+      }
+      print(foodItems);
+      // setState(() {
+      //   foodItems = d;
+      // });
+      // var aptitudeResultItensJson = json.decode(res.body);
+
+      // List<AptituteResult_Items> aptituderesultItems = [];
+
+      // for (var f in aptitudeResultItensJson) {
+      //   AptituteResult_Items requestlistItems = AptituteResult_Items(
+      //     f["job"].toString(),
+      //     f["company"].toString(),
+      //     f["percent"].toString(),
+      //     f["status"].toString(),
+
+      //     // f["longitude"].toString(),
+      //     // f['is_received'].toString(),
+      //   );
+      //   aptituderesultItems.add(requestlistItems);
+      // }
+      // print(aptituderesultItems.length);
+
+      return foodItems;
+    } else {
+      return [];
+    }
+  }
+
+  var recommendedCalories;
+  var recommendedExercise;
+  recommendationExercise(context) async {
+    print(" Inside Exercise function");
+
+    var res = await CallApi().authenticatedGetRequest(
+        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+        'recommendation-exercise?bmi=2');
+
+    // print(res);
+    if (res != null) {
+      // print(res.body);
+
+      var calloriesRecommended = json.decode(res.body)[0];
+      print('object----');
+      print(calloriesRecommended);
+      setState(() {
+        recommendedExercise = calloriesRecommended;
+      });
+      return [];
+    } else {
+      return [];
+    }
+  }
+
+  recommendationCalories(context) async {
+    print(" Inside Callories function");
+
+    var res = await CallApi().authenticatedGetRequest(
+        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+        'recommendation-calories?baseline_activity=1&goal=1&bmi=1');
+
+    // print(res);
+    if (res != null) {
+      // print(res.body);
+
+      var calloriesRecommended = json.decode(res.body)[0];
+      print('object----');
+      print(calloriesRecommended);
+      setState(() {
+        recommendedCalories = calloriesRecommended;
+      });
+      return [];
+    } else {
+      return [];
+    }
   }
 
   @override
@@ -295,29 +444,97 @@ class _HomeScreenState extends State<HomeScreen> {
                               SizedBox(
                                 height: 10,
                               ),
-                              Text(
-                                'Overweight',
-                                style: TextStyle(fontSize: 18),
-                              ),
+                              profileData == null
+                                  ? Text(
+                                      '',
+                                      style: TextStyle(fontSize: 18),
+                                    )
+                                  : Text(
+                                      profileData['bmi_name'].toString(),
+                                      style: TextStyle(fontSize: 18),
+                                    ),
                             ],
                           )
                         ],
                       ),
-                      CustomListTile(
-                        "History",
-                        Icons.history,
-                        Icons.keyboard_arrow_right_outlined,
-                      ),
-                      CustomListTile(
-                        "Notification",
-                        Icons.notifications_outlined,
-                        Icons.keyboard_arrow_right_outlined,
-                      ),
-                      CustomListTile(
-                        "Setting",
-                        Icons.settings,
-                        Icons.keyboard_arrow_right_outlined,
-                      ),
+                      profileData == null
+                          ? CustomListTile(
+                              "",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            )
+                          : CustomListTile(
+                              profileData['bmi'].toStringAsFixed(3),
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            ),
+                      profileData == null
+                          ? CustomListTile(
+                              "",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            )
+                          : CustomListTile(
+                              profileData['height'].toString() + ' feet',
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            ),
+                      profileData == null
+                          ? CustomListTile(
+                              "",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            )
+                          : CustomListTile(
+                              profileData['baseline_activity'].toString(),
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            ),
+                      profileData == null
+                          ? CustomListTile(
+                              "",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            )
+                          : CustomListTile(
+                              profileData['goal'].toString(),
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            ),
+
+                        recommendedCalories == null
+                          ? CustomListTile(
+                              "",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            )
+                          : CustomListTile(
+                              recommendedCalories['calories'].toString()+" per day",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            ),
+
+                            recommendedExercise == null
+                          ? CustomListTile(
+                              "",
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            )
+                          : CustomListTile(
+                              recommendedExercise['name'].toString(),
+                              Icons.height,
+                              Icons.keyboard_arrow_right_outlined,
+                            ),
+                      // CustomListTile(
+                      //   "Notification",
+                      //   Icons.notifications_outlined,
+                      //   Icons.keyboard_arrow_right_outlined,
+                      // ),
+                      // CustomListTile(
+                      //   "Setting",
+                      //   Icons.settings,
+                      //   Icons.keyboard_arrow_right_outlined,
+                      // ),
                     ],
                   ),
                 ),
@@ -393,10 +610,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             SizedBox(
                               height: 30,
                             ),
-                            Text(
-                              '10 kg',
-                              style: TextStyle(fontSize: 18),
-                            ),
+                            profileData == null
+                                ? Text(
+                                    '',
+                                    style: TextStyle(fontSize: 18),
+                                  )
+                                : Text(
+                                    profileData['weight'].toString() + " kg",
+                                    style: TextStyle(fontSize: 18),
+                                  ),
                           ],
                         ),
                       ),
@@ -405,6 +627,53 @@ class _HomeScreenState extends State<HomeScreen> {
                 )
               ],
             ),
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                width: double.infinity,
+                // height: 220,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.01),
+                          spreadRadius: 20,
+                          blurRadius: 10,
+                          offset: const Offset(0, 10))
+                    ],
+                    borderRadius: BorderRadius.circular(30)),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Today Food',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      DropdownSearch<String>.multiSelection(
+                        // items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+                        // items: fetchFood(context),
+                        asyncItems: fetchFood,
+                        popupProps: PopupPropsMultiSelection.menu(
+                          showSelectedItems: true,
+                          showSearchBox: true,
+                          // disabledItemFn: (String s) => s.startsWith('I'),
+                        ),
+                        onChanged: print,
+                        // selectedItems: ["Choose food"],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Container(
@@ -442,68 +711,71 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.only(left: 20, top: 15, bottom: 14),
-              child: Text(
-                'Meals',
-                style:
-                    const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-            ),
-            InkWell(
-              child: CustomListTile(
-                "BreakFast",
-                Icons.restaurant,
-                Icons.add,
-              ),
-              onTap: () {
-                // _showReportDialog();
-                // _showFoodDialog();
-                // _showFoodBotomSheet();
 
-                // DropdownSearch<String>(
-                //   popupProps: PopupProps.bottomSheet(
-                //      showSelectedItems: true,
-                //     showSearchBox: true,
-                //     disabledItemFn: (String s) => s.startsWith('I'),
-                //   ),
-                //   // popupProps: PopupProps.menu(
-                //   //   showSelectedItems: true,
-                //   //   showSearchBox: true,
-                //   //   disabledItemFn: (String s) => s.startsWith('I'),
-                //   // ),
-                //   items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-                //   dropdownDecoratorProps: DropDownDecoratorProps(
-                //     dropdownSearchDecoration: InputDecoration(
-                //       labelText: "Menu mode",
-                //       hintText: "country in menu mode",
-                //     ),
-                //   ),
-                //   onChanged: print,
-                //   selectedItem: "Brazil",
-                // );
-              },
-            ),
-            DropdownSearch<String>.multiSelection(
-            items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-            popupProps: PopupPropsMultiSelection.menu(
-              showSelectedItems: true,
-              showSearchBox: true,
-              // disabledItemFn: (String s) => s.startsWith('I'),
-            ),
-            onChanged: print,
-            selectedItems: ["Brazil"],
-                    ),
-            CustomListTile(
-              "Lunch",
-              Icons.restaurant,
-              Icons.add,
-            ),
-            CustomListTile(
-              "Dinner",
-              Icons.restaurant,
-              Icons.add,
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 20, top: 15, bottom: 14),
+            //   child: Text(
+            //     'Meals',
+            //     style:
+            //         const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            //   ),
+            // ),
+            // InkWell(
+            //   child: CustomListTile(
+            //     "BreakFast",
+            //     Icons.restaurant,
+            //     Icons.add,
+            //   ),
+            //   onTap: () {
+            //     // _showReportDialog();
+            //     // _showFoodDialog();
+            //     // _showFoodBotomSheet();
+
+            //     // DropdownSearch<String>(
+            //     //   popupProps: PopupProps.bottomSheet(
+            //     //      showSelectedItems: true,
+            //     //     showSearchBox: true,
+            //     //     disabledItemFn: (String s) => s.startsWith('I'),
+            //     //   ),
+            //     //   // popupProps: PopupProps.menu(
+            //     //   //   showSelectedItems: true,
+            //     //   //   showSearchBox: true,
+            //     //   //   disabledItemFn: (String s) => s.startsWith('I'),
+            //     //   // ),
+            //     //   items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+            //     //   dropdownDecoratorProps: DropDownDecoratorProps(
+            //     //     dropdownSearchDecoration: InputDecoration(
+            //     //       labelText: "Menu mode",
+            //     //       hintText: "country in menu mode",
+            //     //     ),
+            //     //   ),
+            //     //   onChanged: print,
+            //     //   selectedItem: "Brazil",
+            //     // );
+            //   },
+            // ),
+            // DropdownSearch<String>.multiSelection(
+            //   // items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
+            //   // items: fetchFood(context),
+            //   asyncItems: fetchFood,
+            //   popupProps: PopupPropsMultiSelection.menu(
+            //     showSelectedItems: true,
+            //     showSearchBox: true,
+            //     // disabledItemFn: (String s) => s.startsWith('I'),
+            //   ),
+            //   onChanged: print,
+            //   selectedItems: ["Brazil"],
+            // ),
+            // CustomListTile(
+            //   "Lunch",
+            //   Icons.restaurant,
+            //   Icons.add,
+            // ),
+            // CustomListTile(
+            //   "Dinner",
+            //   Icons.restaurant,
+            //   Icons.add,
+            // ),
           ],
         ),
       ),
@@ -555,4 +827,11 @@ class _MultiSelectChipState extends State<MultiSelectChip> {
       children: _buildChoiceList(),
     );
   }
+}
+
+class FoodItems {
+  final String id;
+  final String name;
+
+  FoodItems({required this.id, required this.name});
 }
