@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:calorie_calculator/api/api.dart';
 import 'package:calorie_calculator/profile_form.dart';
 import 'package:calorie_calculator/utils/constant.dart';
+import 'package:calorie_calculator/utils/snackbar.dart';
 import 'package:calorie_calculator/widgets/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -385,25 +386,37 @@ class _LoginScreenState extends State<LoginScreen> {
       if (res.statusCode == 200) {
         SharedPreferences localStorage = await SharedPreferences.getInstance();
         // localStorage.setString("token", body['token']);
-        localStorage.setString("user", json.encode(body['user']));
-        localStorage.setString("token", json.encode(body['tokens']['access']));
-        localStorage.setString("profile", json.encode(body['profile_data']));
+        // localStorage.setString("user", json.encode(body['user']));
+        // localStorage.setString("token", json.encode(body['tokens']['access']));
+        // localStorage.setString("profile", json.encode(body['profile_data']));
         // localStorage.setString("phone_number", userNumberController.text);
 
-        setState(() {
-          user_id = body['user']['id'];
-        });
-        if (body['profile'] == false) {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => const ProfileFormScreen()));
-        } else if (body['profile'] == true) {
-          // setState(() {});
-          // fetchProfileData(context);
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => const NavigatorWidget()));
+        
+        if (body['msg'] == 'success') {
+          setState(() {
+                      user_id = body['user']['id'];
+                    });
+          localStorage.setString("user", json.encode(body['user']));
+          localStorage.setString(
+              "token", json.encode(body['tokens']['access']));
+          localStorage.setString("profile", json.encode(body['profile_data']));
+         if (body['profile'] == false) {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const ProfileFormScreen()));
+          } else if (body['profile'] == true) {
+            // setState(() {});
+            // fetchProfileData(context);
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const NavigatorWidget()));
+          }
+        } else {
+          showSnack(context, 'Wrong User name or Password!');
         }
+        
       } else if (res.statusCode == 400) {
         print('hhh');
         // setState(() {

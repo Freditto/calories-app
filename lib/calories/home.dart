@@ -689,7 +689,7 @@ print(userData['id'].toString());
                                           style: TextStyle(fontSize: 14),
                                         )
                                       : Text(
-                                          profileData['bmi'].toStringAsFixed(3),
+                                          profileData['bmi'].toString(),
                                           style: TextStyle(fontSize: 14),
                                         ),
                                 ],

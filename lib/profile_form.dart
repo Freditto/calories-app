@@ -162,7 +162,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       print(body);
 
       if (res.statusCode == 200) {
-        // SharedPreferences localStorage = await SharedPreferences.getInstance();
+        SharedPreferences profileStorage = await SharedPreferences.getInstance();
+        profileStorage.setString("profile", json.encode(body['profile_data']));
         // localStorage.setString("token", body['token']);
         // localStorage.setString("user", json.encode(body['user']));
         // localStorage.setString("token", json.encode(body['tokens']['access']));
