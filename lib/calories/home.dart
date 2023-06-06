@@ -366,249 +366,81 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                width: double.infinity,
-                // height: 220,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.01),
-                          spreadRadius: 20,
-                          blurRadius: 10,
-                          offset: const Offset(0, 10))
-                    ],
-                    borderRadius: BorderRadius.circular(30)),
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'BODY MASS INDEX',
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      Row(
-                        children: [
-                          Expanded(
-                            // child: SfRadialGauge(
-
-                            //   axes: <RadialAxis>[
-                            //     RadialAxis(
-                            //       minimum: 0,
-                            //       maximum: 100,
-                            //       showLabels: false,
-                            //       showAxisLine: false,
-                            //         ranges: <GaugeRange>[
-                            //           GaugeRange(startValue: 0, endValue: 25, color:Colors.green),
-                            //           GaugeRange(startValue: 25,endValue: 75,color: Colors.orange),
-                            //           GaugeRange(startValue: 75,endValue: 100,color: Colors.red)],
-                            //         pointers: <GaugePointer>[
-                            //           NeedlePointer(value: 90)],
-                            //         annotations: <GaugeAnnotation>[
-                            //           GaugeAnnotation(widget: Container(child:
-                            //           Text('90.0',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
-                            //               angle: 90, positionFactor: 0.5
-                            //           )]
-                            //     )]),
-
-                            child: CircularPercentIndicator(
-                              radius: 70.0,
-                              lineWidth: 13.0,
-                              animation: true,
-                              percent: 0.7,
-                              center: Text(
-                                "70.0%",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20.0),
-                              ),
-                              circularStrokeCap: CircularStrokeCap.round,
-                              progressColor: Colors.purple,
-                            ),
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'BMI STATUS',
-                                style: TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                              SizedBox(
-                                height: 10,
-                              ),
-                              profileData == null
-                                  ? Text(
-                                      '',
-                                      style: TextStyle(fontSize: 18),
-                                    )
-                                  : Text(
-                                      profileData['bmi_name'].toString(),
-                                      style: TextStyle(fontSize: 18),
-                                    ),
-                            ],
-                          )
-                        ],
-                      ),
-                      profileData == null
-                          ? CustomListTile(
-                              "",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            )
-                          : CustomListTile(
-                              profileData['bmi'].toStringAsFixed(3),
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            ),
-                      profileData == null
-                          ? CustomListTile(
-                              "",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            )
-                          : CustomListTile(
-                              profileData['height'].toString() + ' feet',
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            ),
-                      profileData == null
-                          ? CustomListTile(
-                              "",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            )
-                          : CustomListTile(
-                              profileData['baseline_activity'].toString(),
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            ),
-                      profileData == null
-                          ? CustomListTile(
-                              "",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            )
-                          : CustomListTile(
-                              profileData['goal'].toString(),
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            ),
-
-                        recommendedCalories == null
-                          ? CustomListTile(
-                              "",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            )
-                          : CustomListTile(
-                              recommendedCalories['calories'].toString()+" per day",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            ),
-
-                            recommendedExercise == null
-                          ? CustomListTile(
-                              "",
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            )
-                          : CustomListTile(
-                              recommendedExercise['name'].toString(),
-                              Icons.height,
-                              Icons.keyboard_arrow_right_outlined,
-                            ),
-                      // CustomListTile(
-                      //   "Notification",
-                      //   Icons.notifications_outlined,
-                      //   Icons.keyboard_arrow_right_outlined,
-                      // ),
-                      // CustomListTile(
-                      //   "Setting",
-                      //   Icons.settings,
-                      //   Icons.keyboard_arrow_right_outlined,
-                      // ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      width: double.infinity,
-                      // height: 220,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.01),
-                                spreadRadius: 20,
-                                blurRadius: 10,
-                                offset: const Offset(0, 10))
-                          ],
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Burn Calories',
-                              style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
-                            ),
-                            SizedBox(
-                              height: 30,
-                            ),
-                            Text(
-                              'Start Exercise',
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
-                        ),
-                      ),
+            Container(
+              width: double.infinity,
+              // height: 220,
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.01),
+                        spreadRadius: 20,
+                        blurRadius: 10,
+                        offset: const Offset(0, 10))
+                  ],
+                  borderRadius: BorderRadius.circular(30)),
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'BODY MASS INDEX',
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Container(
-                      width: double.infinity,
-                      // height: 220,
-                      decoration: BoxDecoration(
-                          color: Colors.white,
-                          boxShadow: [
-                            BoxShadow(
-                                color: Colors.black.withOpacity(0.01),
-                                spreadRadius: 20,
-                                blurRadius: 10,
-                                offset: const Offset(0, 10))
-                          ],
-                          borderRadius: BorderRadius.circular(30)),
-                      child: Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Column(
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Expanded(
+                          // child: SfRadialGauge(
+
+                          //   axes: <RadialAxis>[
+                          //     RadialAxis(
+                          //       minimum: 0,
+                          //       maximum: 100,
+                          //       showLabels: false,
+                          //       showAxisLine: false,
+                          //         ranges: <GaugeRange>[
+                          //           GaugeRange(startValue: 0, endValue: 25, color:Colors.green),
+                          //           GaugeRange(startValue: 25,endValue: 75,color: Colors.orange),
+                          //           GaugeRange(startValue: 75,endValue: 100,color: Colors.red)],
+                          //         pointers: <GaugePointer>[
+                          //           NeedlePointer(value: 90)],
+                          //         annotations: <GaugeAnnotation>[
+                          //           GaugeAnnotation(widget: Container(child:
+                          //           Text('90.0',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+                          //               angle: 90, positionFactor: 0.5
+                          //           )]
+                          //     )]),
+
+                          child: CircularPercentIndicator(
+                            radius: 70.0,
+                            lineWidth: 13.0,
+                            animation: true,
+                            percent: 0.7,
+                            center: Text(
+                              "70.0%",
+                              style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20.0),
+                            ),
+                            circularStrokeCap: CircularStrokeCap.round,
+                            progressColor: Colors.purple,
+                          ),
+                        ),
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Current Weight',
+                              'BMI STATUS',
                               style: TextStyle(
-                                  fontSize: 20, fontWeight: FontWeight.bold),
+                                  fontSize: 18, fontWeight: FontWeight.bold),
                             ),
                             SizedBox(
-                              height: 30,
+                              height: 10,
                             ),
                             profileData == null
                                 ? Text(
@@ -616,17 +448,414 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(fontSize: 18),
                                   )
                                 : Text(
-                                    profileData['weight'].toString() + " kg",
+                                    profileData['bmi_name'].toString(),
                                     style: TextStyle(fontSize: 18),
                                   ),
                           ],
-                        ),
-                      ),
+                        )
+                      ],
                     ),
-                  ),
-                )
-              ],
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Height',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  profileData == null ?
+                                  Text(
+                                    '',
+                                    style: TextStyle(fontSize: 14),
+                                  )
+                                  :
+                                  Text(
+                                  profileData['height'].toString() +
+                                      ' feet',
+                                  style: TextStyle(fontSize: 14),
+                                ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Weight',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  profileData == null
+                                      ? Text(
+                                          '',
+                                          style: TextStyle(fontSize: 14),
+                                        )
+                                      : Text(
+                                          profileData['weight'].toString() +
+                                              " kg",
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Your BMI',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  profileData == null
+                                      ? Text(
+                                          '',
+                                          style: TextStyle(fontSize: 14),
+                                        )
+                                      : Text(
+                                          profileData['bmi']
+                                              .toStringAsFixed(3),
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Padding(
+                              padding: EdgeInsets.all(16.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Goal',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(
+                                    height: 16,
+                                  ),
+                                  profileData == null
+                                      ? Text(
+                                          '',
+                                          style: TextStyle(fontSize: 14),
+                                        )
+                                      : Text(
+                                          profileData['goal'].toString(),
+                                          style: TextStyle(fontSize: 14),
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+
+                    
+
+                    // profileData == null
+                    //     ? CustomListTile(
+                    //         "",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       )
+                    //     : CustomListTile(
+                    //         profileData['bmi'].toStringAsFixed(3),
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       ),
+                    // profileData == null
+                    //     ? CustomListTile(
+                    //         "",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       )
+                    //     : CustomListTile(
+                    //         profileData['height'].toString() + ' feet',
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       ),
+                    // profileData == null
+                    //     ? CustomListTile(
+                    //         "",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       )
+                    //     : CustomListTile(
+                    //         profileData['baseline_activity'].toString(),
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       ),
+                    // profileData == null
+                    //     ? CustomListTile(
+                    //         "",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       )
+                    //     : CustomListTile(
+                    //         profileData['goal'].toString(),
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       ),
+
+                    //   recommendedCalories == null
+                    //     ? CustomListTile(
+                    //         "",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       )
+                    //     : CustomListTile(
+                    //         recommendedCalories['calories'].toString()+" per day",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       ),
+
+                    //       recommendedExercise == null
+                    //     ? CustomListTile(
+                    //         "",
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       )
+                    //     : CustomListTile(
+                    //         recommendedExercise['name'].toString(),
+                    //         Icons.height,
+                    //         Icons.keyboard_arrow_right_outlined,
+                    //       ),
+                    // CustomListTile(
+                    //   "Notification",
+                    //   Icons.notifications_outlined,
+                    //   Icons.keyboard_arrow_right_outlined,
+                    // ),
+                    // CustomListTile(
+                    //   "Setting",
+                    //   Icons.settings,
+                    //   Icons.keyboard_arrow_right_outlined,
+                    // ),
+                  ],
+                ),
+              ),
             ),
+            
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Baseline Activity',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    profileData == null
+                        ? Text(
+                            '',
+                            style: TextStyle(fontSize: 14),
+                          )
+                        : Text(
+                            profileData['baseline_activity'].toString(),
+                            style: TextStyle(fontSize: 14),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Recommended Calories',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    profileData == null
+                        ? Text(
+                            '',
+                            style: TextStyle(fontSize: 14),
+                          )
+                        : Text(
+                            recommendedCalories['calories'].toString() +
+                                " per day",
+                            style: TextStyle(fontSize: 14),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Recommended Exercise',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
+                    SizedBox(
+                      height: 16,
+                    ),
+                    profileData == null
+                        ? Text(
+                            '',
+                            style: TextStyle(fontSize: 14),
+                          )
+                        : Text(
+                            recommendedExercise['name'].toString(),
+                            style: TextStyle(fontSize: 14),
+                          ),
+                  ],
+                ),
+              ),
+            ),
+            
+            // Row(
+            //   children: [
+            //     Expanded(
+            //       child: Padding(
+            //         padding: const EdgeInsets.all(16.0),
+            //         child: Container(
+            //           width: double.infinity,
+            //           // height: 220,
+            //           decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               boxShadow: [
+            //                 BoxShadow(
+            //                     color: Colors.black.withOpacity(0.01),
+            //                     spreadRadius: 20,
+            //                     blurRadius: 10,
+            //                     offset: const Offset(0, 10))
+            //               ],
+            //               borderRadius: BorderRadius.circular(30)),
+            //           child: Padding(
+            //             padding: EdgeInsets.all(16.0),
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 Text(
+            //                   'Burn Calories',
+            //                   style: TextStyle(
+            //                       fontSize: 20, fontWeight: FontWeight.bold),
+            //                 ),
+            //                 SizedBox(
+            //                   height: 30,
+            //                 ),
+            //                 Text(
+            //                   'Start Exercise',
+            //                   style: TextStyle(fontSize: 18),
+            //                 ),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     ),
+            //     Expanded(
+            //       child: Padding(
+            //         padding: const EdgeInsets.all(16.0),
+            //         child: Container(
+            //           width: double.infinity,
+            //           // height: 220,
+            //           decoration: BoxDecoration(
+            //               color: Colors.white,
+            //               boxShadow: [
+            //                 BoxShadow(
+            //                     color: Colors.black.withOpacity(0.01),
+            //                     spreadRadius: 20,
+            //                     blurRadius: 10,
+            //                     offset: const Offset(0, 10))
+            //               ],
+            //               borderRadius: BorderRadius.circular(30)),
+            //           child: Padding(
+            //             padding: EdgeInsets.all(16.0),
+            //             child: Column(
+            //               crossAxisAlignment: CrossAxisAlignment.start,
+            //               children: [
+            //                 Text(
+            //                   'Current Weight',
+            //                   style: TextStyle(
+            //                       fontSize: 20, fontWeight: FontWeight.bold),
+            //                 ),
+            //                 SizedBox(
+            //                   height: 30,
+            //                 ),
+            //                 profileData == null
+            //                     ? Text(
+            //                         '',
+            //                         style: TextStyle(fontSize: 18),
+            //                       )
+            //                     : Text(
+            //                         profileData['weight'].toString() + " kg",
+            //                         style: TextStyle(fontSize: 18),
+            //                       ),
+            //               ],
+            //             ),
+            //           ),
+            //         ),
+            //       ),
+            //     )
+            //   ],
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(16.0),
@@ -667,6 +896,62 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         onChanged: print,
                         // selectedItems: ["Choose food"],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(),
+                Padding(
+                  padding:
+                      EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 40.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      // Add your second button press logic here
+                      print('Button 2 Pressed!');
+                    },
+                    child: Text('Save Food'),
+                  ),
+                ),
+              ],
+            ),
+
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Container(
+                width: double.infinity,
+                // height: 220,
+                decoration: BoxDecoration(
+                    color: Colors.white,
+                    boxShadow: [
+                      BoxShadow(
+                          color: Colors.black.withOpacity(0.01),
+                          spreadRadius: 20,
+                          blurRadius: 10,
+                          offset: const Offset(0, 10))
+                    ],
+                    borderRadius: BorderRadius.circular(30)),
+                child: const Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Selected Food',
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      SizedBox(
+                        height: 10,
+                      ),
+                      Text(
+                        'Average',
+                        style: TextStyle(fontSize: 18),
                       ),
                     ],
                   ),
