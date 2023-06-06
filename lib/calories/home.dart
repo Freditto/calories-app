@@ -25,11 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     checkLoginStatus();
     _getUserInfo();
-
+    viewTodayFood_API(context);
     fetchFood(context);
-    //listenNotifications();
+    // listenNotifications();
     recommendationCalories(context);
     recommendationExercise(context);
+    todayCalories_API(context);
 
     _getProfileInfo();
     super.initState();
@@ -71,6 +72,20 @@ class _HomeScreenState extends State<HomeScreen> {
     print(profileData);
   }
 
+  setPageState() {
+    print('________');
+    // setState(() {});
+    viewTodayFood_API(context);
+    fetchFood(context);
+    //listenNotifications();
+    recommendationCalories(context);
+    recommendationExercise(context);
+    // todayCalories_API(context);R
+    setState(() {
+      
+    });
+  }
+
   List<String> brealFastMeals = [
     "Not relevant",
     "Illegal",
@@ -90,8 +105,26 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   List<String> selectedReportList = [];
+  var todayCall;
 
-  _showReportDialog() {
+
+  
+    
+  _showReportDialog(String data) {
+    // return StatefulBuilder(builder: (context, setState) {
+    //   return AlertDialog(
+    //     content: Text(data),
+    //     title: Text('Stateful Dialog'),
+    //     actions: <Widget>[
+    //       InkWell(
+    //         child: Text('OK   '),
+    //         onTap: () {
+              
+    //         },
+    //       ),
+    //     ],
+    //   );
+    // });
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -108,7 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                child: Text("Report"),
+                child: Text(data),
                 onPressed: () => Navigator.of(context).pop(),
               )
             ],
@@ -262,6 +295,10 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
+  onAddDaily() {
+    print("now good");
+  }
+
   recommendationCalories(context) async {
     print(" Inside Callories function");
 
@@ -279,6 +316,103 @@ class _HomeScreenState extends State<HomeScreen> {
       setState(() {
         recommendedCalories = calloriesRecommended;
       });
+      return [];
+    } else {
+      return [];
+    }
+  }
+
+  var selectedValue = [];
+
+  void _saveFood_API() async {
+    print(userData);
+    var data = [];
+    for (var d in selectedValue) {
+      data.add({
+        'user': userData['id'],
+        'food': d,
+        'day': DateFormat('EEEE').format(DateTime.now())
+      });
+    }
+
+    print(data);
+
+    var res = await CallApi().authenticatedPostRequest(data, 'daily-food');
+    if (res == null) {
+      // setState(() {
+      //   _isLoading = false;
+      //   // _not_found = true;
+      // });
+      // showSnack(context, 'No Network!');
+    } else {
+      var body = json.decode(res!.body);
+      print(body);
+
+      if (res.statusCode == 200) {
+      } else if (res.statusCode == 400) {
+        print('hhh');
+        // setState(() {
+        //   _isLoading = false;
+        //   _not_found = true;
+        // });
+      } else {}
+    }
+
+    // ignore: avoid_print
+  }
+  var todayFood = [];
+
+  viewTodayFood_API(context) async {
+    print(" Inside ===========-------");
+
+    var res = await CallApi().authenticatedGetRequest(
+        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+        'food-daily-meal-record?user='+
+            userData['id'].toString() +'&goal=1&day='+
+            DateFormat('EEEE').format(DateTime.now()));
+
+    // print(res);
+    if (res != null) {
+      // print(res.body);
+
+      var x = json.decode(res.body);
+      print('object----');
+      print(x);
+      setState(() {
+        x = todayFood;
+        // recommendedCalories = calloriesRecommended;
+      });
+      return [];
+    } else {
+      return [];
+    }
+  }
+
+  todayCalories_API(context) async {
+    print(" Inside Today Callories __________________");
+print(userData['id'].toString());
+    var res = await CallApi().authenticatedGetRequest(
+        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+        'daily-food-get/' +
+            userData['id'].toString() +
+            '/' +
+            DateFormat('EEEE').format(DateTime.now()));
+    print(" Inside Today Callories __________________");
+
+    print(res);
+    if (res != null) {
+
+      // print(res.body);
+
+      var todayCalories = json.decode(res.body);
+      setState(() {
+        todayCall = todayCalories;
+      });
+      // print('object----');
+      // print(calloriesRecommended);
+      // setState(() {
+      // recommendedCalories = calloriesRecommended;
+      //
       return [];
     } else {
       return [];
@@ -333,7 +467,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 10,
                       ),
-                      Chart(),
+                      todayCall == null?
+                      Chart(calories: "0.00".toString(),)
+                      :
+                      Chart(
+                              calories: todayCall['total_calories'].toString(),
+                            )
+
                       // Row(
                       //   children: [
                       //     Text(
@@ -386,8 +526,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   children: [
                     Text(
                       'BODY MASS INDEX',
-                      style: TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(
                       height: 20,
@@ -424,8 +564,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             center: Text(
                               "70.0%",
                               style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20.0),
+                                  fontWeight: FontWeight.bold, fontSize: 20.0),
                             ),
                             circularStrokeCap: CircularStrokeCap.round,
                             progressColor: Colors.purple,
@@ -464,8 +603,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Height',
@@ -476,17 +614,16 @@ class _HomeScreenState extends State<HomeScreen> {
                                   SizedBox(
                                     height: 16,
                                   ),
-                                  profileData == null ?
-                                  Text(
-                                    '',
-                                    style: TextStyle(fontSize: 14),
-                                  )
-                                  :
-                                  Text(
-                                  profileData['height'].toString() +
-                                      ' feet',
-                                  style: TextStyle(fontSize: 14),
-                                ),
+                                  profileData == null
+                                      ? Text(
+                                          '',
+                                          style: TextStyle(fontSize: 14),
+                                        )
+                                      : Text(
+                                          profileData['height'].toString() +
+                                              ' feet',
+                                          style: TextStyle(fontSize: 14),
+                                        ),
                                 ],
                               ),
                             ),
@@ -498,8 +635,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Padding(
                               padding: EdgeInsets.all(16.0),
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
                                     'Weight',
@@ -553,8 +689,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                           style: TextStyle(fontSize: 14),
                                         )
                                       : Text(
-                                          profileData['bmi']
-                                              .toStringAsFixed(3),
+                                          profileData['bmi'].toStringAsFixed(3),
                                           style: TextStyle(fontSize: 14),
                                         ),
                                 ],
@@ -595,8 +730,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     ),
-
-                    
 
                     // profileData == null
                     //     ? CustomListTile(
@@ -680,7 +813,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            
+
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: Padding(
@@ -768,7 +901,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
-            
+
             // Row(
             //   children: [
             //     Expanded(
@@ -894,7 +1027,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           showSearchBox: true,
                           // disabledItemFn: (String s) => s.startsWith('I'),
                         ),
-                        onChanged: print,
+                        onChanged: (newValue) {
+                          setState(() {
+                            selectedValue = newValue;
+                            print(newValue);
+                          });
+                          // You can perform additional actions with the selected value here
+                          print('Selected Value: $newValue');
+                        },
                         // selectedItems: ["Choose food"],
                       ),
                     ],
@@ -912,6 +1052,11 @@ class _HomeScreenState extends State<HomeScreen> {
                       EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 40.0),
                   child: ElevatedButton(
                     onPressed: () {
+                      // _saveFood_API();
+                      // setPageState();
+                      _showReportDialog(todayFood.toString());
+                      // viewTodayFood_API(context);
+                      // todayCalories_API(context);
                       // Add your second button press logic here
                       print('Button 2 Pressed!');
                     },
@@ -936,7 +1081,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           offset: const Offset(0, 10))
                     ],
                     borderRadius: BorderRadius.circular(30)),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -949,8 +1094,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       SizedBox(
                         height: 10,
                       ),
+                      todayFood == null? 
                       Text(
-                        'Average',
+                        'No Food Selected',
+                        style: TextStyle(fontSize: 18),
+                      )
+                      :
+                      Text(
+                        todayFood.toString(),
                         style: TextStyle(fontSize: 18),
                       ),
                     ],

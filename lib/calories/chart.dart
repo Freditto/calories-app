@@ -3,8 +3,9 @@ import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 
 class Chart extends StatelessWidget {
+  final String? calories;
   const Chart({
-    Key? key,
+    Key? key,this.calories
   }) : super(key: key);
 
   @override
@@ -27,7 +28,7 @@ class Chart extends StatelessWidget {
               children: [
                 SizedBox(height: defaultPadding),
                 Text(
-                  "1258",
+                  calories!,
                   style: Theme.of(context).textTheme.headline4!.copyWith(
                         color: Colors.black,
                         fontWeight: FontWeight.w600,
