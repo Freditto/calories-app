@@ -560,12 +560,12 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                   // _login();
                   _save_profile_info();
 
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const NavigatorWidget(),
-                    ),
-                  );
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => const NavigatorWidget(),
+                  //   ),
+                  // );
                 },
                 child: const Text(
                   'Continue',
