@@ -25,14 +25,11 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     checkLoginStatus();
     _getUserInfo();
-    viewTodayFood_API(context);
-    fetchFood(context);
+    // fetchFood(context);
     // listenNotifications();
-    recommendationCalories(context);
-    recommendationExercise(context);
-    todayCalories_API(context);
+    
 
-    _getProfileInfo();
+    
     super.initState();
   }
 
@@ -59,6 +56,11 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       userData = user;
     });
+
+    print(userData);
+    _getProfileInfo();
+
+    
   }
 
   void _getProfileInfo() async {
@@ -69,40 +71,54 @@ class _HomeScreenState extends State<HomeScreen> {
       profileData = profile;
     });
 
-    print(profileData);
+    // print(profileData);
+
+    recommendationCalories(context);
+    recommendationExercise(context);
+    todayCalories_API(context);
+    viewTodayFood_API(context);
+
   }
 
   setPageState() {
     print('________');
     // setState(() {});
-    viewTodayFood_API(context);
-    fetchFood(context);
+    // viewTodayFood_API(context);
+    // fetchFood(context);
     //listenNotifications();
-    recommendationCalories(context);
-    recommendationExercise(context);
+    // recommendationCalories(context);
+    // recommendationExercise(context);
     // todayCalories_API(context);R
     setState(() {
       
     });
   }
 
-  List<String> brealFastMeals = [
-    "Not relevant",
-    "Illegal",
-    "Spam",
-    "Offensive",
-    "Uncivil"
-        "Not relevant",
-    "Illegal",
-    "Spam",
-    "Offensive",
-    "Uncivil"
-        "Not relevant",
-    "Illegal",
-    "Spam",
-    "Offensive",
-    "Uncivil"
-  ];
+  // List<String> brealFastMeals = [];
+  List<String> todayFastMeals(){
+    List<String> data = [];
+    for(var d in todayFood){
+      data.add(d['food']);
+    }
+    return data;
+  }
+  // [
+  //   "Not relevant",
+  //   "Illegal",
+  //   "Spam",
+  //   "Offensive",
+  //   "Uncivil"
+  //       "Not relevant",
+  //   "Illegal",
+  //   "Spam",
+  //   "Offensive",
+  //   "Uncivil"
+  //       "Not relevant",
+  //   "Illegal",
+  //   "Spam",
+  //   "Offensive",
+  //   "Uncivil"
+  // ];
 
   List<String> selectedReportList = [];
   var todayCall;
@@ -130,9 +146,9 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (BuildContext context) {
           //Here we will build the content of the dialog
           return AlertDialog(
-            title: Text("BreakFast Meals"),
+            title: Text("Today Foods"),
             content: MultiSelectChip(
-              brealFastMeals,
+              todayFastMeals(),
               onSelectionChanged: (selectedList) {
                 setState(() {
                   selectedReportList = selectedList;
@@ -141,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             actions: <Widget>[
               TextButton(
-                child: Text(data),
+                child: Text('OK'),
                 onPressed: () => Navigator.of(context).pop(),
               )
             ],
@@ -239,7 +255,7 @@ class _HomeScreenState extends State<HomeScreen> {
       var b = json.decode(res.body);
       print(b.runtimeType);
       for (var data in b) {
-        print('----');
+        // print('----');
         foodItems.add(data['name']);
       }
       print(foodItems);
@@ -270,8 +286,8 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  var recommendedCalories;
-  var recommendedExercise;
+  Map<String, dynamic> recommendedCalories = {'calories':''};
+  Map<String, dynamic> recommendedExercise = {'name': ''};
   recommendationExercise(context) async {
     print(" Inside Exercise function");
 
@@ -283,11 +299,11 @@ class _HomeScreenState extends State<HomeScreen> {
     if (res != null) {
       // print(res.body);
 
-      var calloriesRecommended = json.decode(res.body)[0];
-      print('object----');
-      print(calloriesRecommended);
+      var exerciseRecommended = json.decode(res.body)[0];
+      // print('object----****');
+      // print(exerciseRecommended);
       setState(() {
-        recommendedExercise = calloriesRecommended;
+        recommendedExercise = exerciseRecommended;
       });
       return [];
     } else {
@@ -295,24 +311,33 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  onAddDaily() {
-    print("now good");
+  List<Widget> ListFood() {
+    List<Widget> toreturn = [];
+    for(var data in todayFood){
+      toreturn.add(
+         Text(
+          data.toString(),
+          style: TextStyle(fontSize: 18),
+        ),
+      );
+    }
+return [];
   }
 
   recommendationCalories(context) async {
     print(" Inside Callories function");
 
     var res = await CallApi().authenticatedGetRequest(
-        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
-        'recommendation-calories?baseline_activity=1&goal=1&bmi=1');
+        'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+        // 'recommendation-calories?baseline_activity=1&goal=1&bmi=1');
 
-    // print(res);
+    print(res);
     if (res != null) {
-      // print(res.body);
+      print(res.body);
 
       var calloriesRecommended = json.decode(res.body)[0];
-      print('object----');
-      print(calloriesRecommended);
+      // print('object----');
+      // print(calloriesRecommended);
       setState(() {
         recommendedCalories = calloriesRecommended;
       });
@@ -365,23 +390,31 @@ class _HomeScreenState extends State<HomeScreen> {
   viewTodayFood_API(context) async {
     print(" Inside ===========-------");
 
-    var res = await CallApi().authenticatedGetRequest(
-        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
-        'food-daily-meal-record?user='+
-            userData['id'].toString() +'&goal=1&day='+
-            DateFormat('EEEE').format(DateTime.now()));
-
-    // print(res);
+    // var res = await CallApi().authenticatedGetRequest(
+    //     // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+    //     'food-daily-meal-record?user='+
+    //         userData['id'].toString() +'&goal=1&day='+
+    //         DateFormat('EEEE').format(DateTime.now()));
+String day = DateFormat('EEEE').format(DateTime.now());
+print(profileData['goal_id']);
+print(userData['id']);
+print(day);
+var res = await CallApi().authenticatedGetRequest(
+        'food-daily-meal-record?user=${userData['id']}&goal=goal=${profileData['goal_id']}&day=${day}');
+  print("mimi");
+    print(res);
     if (res != null) {
-      // print(res.body);
+      print(res.body);
 
       var x = json.decode(res.body);
-      print('object----');
+      print('object-==---');
       print(x);
       setState(() {
-        x = todayFood;
+        todayFood = x;
         // recommendedCalories = calloriesRecommended;
       });
+      print(todayFood);
+      print("today === ===");
       return [];
     } else {
       return [];
@@ -390,15 +423,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   todayCalories_API(context) async {
     print(" Inside Today Callories __________________");
-print(userData['id'].toString());
+print(userData);
     var res = await CallApi().authenticatedGetRequest(
         // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
         'daily-food-get/' +
             userData['id'].toString() +
             '/' +
             DateFormat('EEEE').format(DateTime.now()));
-    print(" Inside Today Callories __________________");
 
+    // var res = await CallApi().authenticatedGetRequest(
+    //     // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
+    //     'daily-food-get/2/Tuesday');
+    print(" Inside Today Callories __________________");
+    // var res = 2;
     print(res);
     if (res != null) {
 
@@ -415,6 +452,7 @@ print(userData['id'].toString());
       //
       return [];
     } else {
+      print("shit---");
       return [];
     }
   }
@@ -467,7 +505,7 @@ print(userData['id'].toString());
                       SizedBox(
                         height: 10,
                       ),
-                      todayCall == null?
+                      todayCall == null ?
                       Chart(calories: "0.00".toString(),)
                       :
                       Chart(
@@ -1043,72 +1081,101 @@ print(userData['id'].toString());
               ),
             ),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Container(),
-                Padding(
-                  padding:
-                      EdgeInsets.only(top: 0, bottom: 0, left: 0, right: 40.0),
-                  child: ElevatedButton(
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                 
+                  ElevatedButton(
                     onPressed: () {
                       // _saveFood_API();
                       // setPageState();
-                      _showReportDialog(todayFood.toString());
+                      // _showReportDialog(todayFood.toString());
                       // viewTodayFood_API(context);
                       // todayCalories_API(context);
                       // Add your second button press logic here
-                      print('Button 2 Pressed!');
+                      print('Button 1 Pressed!');
+                    },
+                    child: Text('Reset'),
+                  ),
+                    ElevatedButton(
+                      onPressed: () {
+                        // _saveFood_API();
+                        // setPageState();
+                        _showReportDialog(todayFood.toString());
+                        // viewTodayFood_API(context);
+                        // todayCalories_API(context);
+                        // Add your second button press logic here
+                        print('Button 2 Pressed!');
+                      },
+                      child: Text('Show Selected Food'),
+                    ),
+            
+                  ElevatedButton(
+                    onPressed: () {
+                      _saveFood_API();
+                      // setPageState();
+                      // _showReportDialog(todayFood.toString());
+                      // viewTodayFood_API(context);
+                      // todayCalories_API(context);
+                      // Add your second button press logic here
+                      print('Button 3 Pressed!');
                     },
                     child: Text('Save Food'),
                   ),
-                ),
-              ],
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Container(
-                width: double.infinity,
-                // height: 220,
-                decoration: BoxDecoration(
-                    color: Colors.white,
-                    boxShadow: [
-                      BoxShadow(
-                          color: Colors.black.withOpacity(0.01),
-                          spreadRadius: 20,
-                          blurRadius: 10,
-                          offset: const Offset(0, 10))
-                    ],
-                    borderRadius: BorderRadius.circular(30)),
-                child: Padding(
-                  padding: EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Selected Food',
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      todayFood == null? 
-                      Text(
-                        'No Food Selected',
-                        style: TextStyle(fontSize: 18),
-                      )
-                      :
-                      Text(
-                        todayFood.toString(),
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    ],
-                  ),
-                ),
+                ],
               ),
             ),
+
+            // Padding(
+            //   padding: const EdgeInsets.all(16.0),
+            //   child: Container(
+            //     width: double.infinity,
+            //     // height: 220,
+            //     decoration: BoxDecoration(
+            //         color: Colors.white,
+            //         boxShadow: [
+            //           BoxShadow(
+            //               color: Colors.black.withOpacity(0.01),
+            //               spreadRadius: 20,
+            //               blurRadius: 10,
+            //               offset: const Offset(0, 10))
+            //         ],
+            //         borderRadius: BorderRadius.circular(30)),
+            //     child: Padding(
+            //       padding: EdgeInsets.all(16.0),
+            //       child: Column(
+            //         crossAxisAlignment: CrossAxisAlignment.start,
+            //         children: [
+            //           Text(
+            //             'Selected Food',
+            //             style: TextStyle(
+            //                 fontSize: 20, fontWeight: FontWeight.bold),
+            //           ),
+            //           SizedBox(
+            //             height: 10,
+            //           ),
+            //           todayFood.length == 0? 
+            //           Text(
+            //             'No Food Selected',
+            //             style: TextStyle(fontSize: 18),
+            //           )
+            //           :
+            //           Column(
+            //             children: ListFood()
+            //             // [
+            //             //   // Text(
+            //             //   //   todayFood.toString(),
+            //             //   //   style: TextStyle(fontSize: 18),
+            //             //   // ),
+            //             // ],
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
 
             Padding(
               padding: const EdgeInsets.all(16.0),

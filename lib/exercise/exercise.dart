@@ -1,3 +1,4 @@
+import 'package:calorie_calculator/exercise/singleExercise.dart';
 import 'package:calorie_calculator/utils/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -49,18 +50,16 @@ class _ExersiceScreenState extends State<ExersiceScreen> {
     final mediaQuery = MediaQuery.of(context);
     return GestureDetector(
       onTap: () {
-        // Navigator.push(
-        //   context,
-        //   MaterialPageRoute(builder: (context) {
-        //     return NewsDetailScreen(
-        //       id: id,
-        //       imageAddress: imageAddress,
-        //       title: title,
-        //       text: text,
-        //       bookmarkedNews: bookmarkedNews,
-        //     );
-        //   }),
-        // );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) {
+            return SingleExerciseScreen(
+              name,
+              image,
+              
+            );
+          }),
+        );
       },
       child: Container(
         // width: mediaQuery.size.width * 0.8,

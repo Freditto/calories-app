@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:calorie_calculator/api/api.dart';
 import 'package:calorie_calculator/auth.dart';
+import 'package:calorie_calculator/utils/snackbar.dart';
 import 'package:calorie_calculator/widgets/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -173,8 +174,10 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         //   _isLoading = false;
         // });
 
+        showSnack(context, 'Successfully Saved Please Login Again!');
+
         Navigator.push(
-            context, MaterialPageRoute(builder: (context) => const NavigatorWidget()));
+            context, MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else if (res.statusCode == 400) {
         print('hhh');
         // setState(() {
