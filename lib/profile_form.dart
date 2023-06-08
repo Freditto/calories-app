@@ -133,7 +133,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     // var cellphone = code + number;
 
     var bmi = int.parse(weightController.text) /
-        (int.parse(heightController.text) * int.parse(heightController.text));
+        (int.parse(heightController.text) /
+            100 * int.parse(heightController.text)/100);
 
 // *******************************************************
     var data = {
@@ -229,7 +230,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                 borderSide:
                                     const BorderSide(color: Colors.grey),
                               ),
-                              hintText: 'Height in meters',
+                              hintText: 'Height in centimeter',
                               hintStyle: const TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
