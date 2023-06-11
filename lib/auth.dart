@@ -216,7 +216,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     // );
                   },
                   child: const Text(
-                    'Continue',
+                    'Login',
                     style: TextStyle(color: Colors.white),
                   ),
                 ),
@@ -391,16 +391,16 @@ class _LoginScreenState extends State<LoginScreen> {
         // localStorage.setString("profile", json.encode(body['profile_data']));
         // localStorage.setString("phone_number", userNumberController.text);
 
-        
         if (body['msg'] == 'success') {
           setState(() {
-                      user_id = body['user']['id'];
-                    });
+            user_id = body['user']['id'];
+          });
           localStorage.setString("user", json.encode(body['user']));
           localStorage.setString(
               "token", json.encode(body['tokens']['access']));
           localStorage.setString("profile", json.encode(body['profile_data']));
-         if (body['profile'] == false) {
+          if (body['profile'] == false) {
+            // ignore: use_build_context_synchronously
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -408,15 +408,16 @@ class _LoginScreenState extends State<LoginScreen> {
           } else if (body['profile'] == true) {
             // setState(() {});
             // fetchProfileData(context);
+            // ignore: use_build_context_synchronously
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const NavigatorWidget()));
           }
         } else {
+          // ignore: use_build_context_synchronously
           showSnack(context, 'Wrong User name or Password!');
         }
-        
       } else if (res.statusCode == 400) {
         print('hhh');
         // setState(() {

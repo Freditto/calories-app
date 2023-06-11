@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:calorie_calculator/auth.dart';
+import 'package:calorie_calculator/update_profile.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
     //listenNotifications();
     super.initState();
+  }
+
+  bool _isButtonPressed = false;
+
+  void _updateState(bool isPressed) {
+    print(_isButtonPressed);
+    setState(() {
+      _isButtonPressed = isPressed;
+    });
   }
 
   checkLoginStatus() async {
@@ -167,6 +177,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               const SizedBox(height: 20.0),
 
+              InkWell(
+                onTap: () {
+                  // print(profileData['id'].runtimeType);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateProfileFormScreen(
+                              profile: profileData['id'],
+                              callback: _updateState)));
+                },
+                child: Text(
+                  "Update profile",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w800,
+                    fontSize: 14.0,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20.0),
+
               userData == null
                   ? const Text("",
                       style: TextStyle(
@@ -223,8 +254,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onTap: () {
                   _logoutDialog(context);
                 },
-
-                
                 child: ListTile(
                   title: const Text(
                     ("Sign out"),

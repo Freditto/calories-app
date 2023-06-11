@@ -3,18 +3,22 @@ import 'dart:convert';
 import 'package:calorie_calculator/api/api.dart';
 import 'package:calorie_calculator/auth.dart';
 import 'package:calorie_calculator/utils/snackbar.dart';
-import 'package:calorie_calculator/widgets/navigator.dart';
+// import 'package:calorie_calculator/widgets/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class ProfileFormScreen extends StatefulWidget {
-  const ProfileFormScreen({super.key});
+class UpdateProfileFormScreen extends StatefulWidget {
+  final int profile;
+  final Function(bool) callback;
+  const UpdateProfileFormScreen(
+      {super.key, required this.profile, required this.callback});
 
   @override
-  State<ProfileFormScreen> createState() => _ProfileFormScreenState();
+  State<UpdateProfileFormScreen> createState() =>
+      _UpdateProfileFormScreenState();
 }
 
-class _ProfileFormScreenState extends State<ProfileFormScreen> {
+class _UpdateProfileFormScreenState extends State<UpdateProfileFormScreen> {
   var userData, next;
 
   final _formKey = GlobalKey<FormState>();
@@ -140,8 +144,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
 // *******************************************************
     var data = {
-      'user': userData['id'],
-      'gender': genderStatus,
+      'profile': widget.profile,
+      // 'gender': genderStatus,
       'goal': goalStatus,
       'age': int.parse(ageController.text),
       'height': int.parse(heightController.text),
@@ -153,7 +157,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
     print(data);
 
-    var res = await CallApi().authenticatedPostRequest(data, 'profile');
+    var res = await CallApi().authenticatedPostRequest(data, 'update-profile');
     if (res == null) {
       // setState(() {
       //   _isLoading = false;
@@ -175,16 +179,26 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         // setState(() {
         //   _isLoading = false;
         // });
+        if (body['save']) {
+          widget.callback;
+          Navigator.pop(context);
+          showSnack(context, 'Successfully Updating profile!');
+        }
+        else{
+          Navigator.pop(context);
 
-        showSnack(context, 'Successfully Saved Please Login Again!');
-        SharedPreferences preferences = await SharedPreferences.getInstance();
-        await preferences.clear();
+        showSnack(context, 'Fail to update profile!');
 
-        Navigator.push(context,
-            MaterialPageRoute(builder: (context) => const LoginScreen()));
+        }
+
+        // SharedPreferences preferences = await SharedPreferences.getInstance();
+        // await preferences.clear();
+
+        // Navigator.push(context,
+        //     MaterialPageRoute(builder: (context) => const LoginScreen()));
       } else if (res.statusCode == 400) {
         // print('hhh');
-        showSnack(context, 'Failed to save profile!');
+        showSnack(context, 'Failed to update profile!');
         // setState(() {
         //   _isLoading = false;
         //   _not_found = true;
@@ -199,7 +213,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Set up your profile'),
+        title: const Text('Update your profile'),
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
         automaticallyImplyLeading: true,
@@ -316,54 +330,54 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       height: 30,
                     ),
 
-                    Container(
-                      // padding: const EdgeInsets.all(0.0),
-                      padding: const EdgeInsets.only(
-                          left: 10.0, right: 10.0, top: 0, bottom: 0),
-                      decoration: BoxDecoration(
-                          border: Border.all(color: Colors.grey),
-                          borderRadius: BorderRadius.circular(12)),
-                      child: DropdownButton<String>(
-                        value: genderStatus,
-                        //elevation: 5,
-                        // style: TextStyle(color: Colors.black),
+                    // Container(
+                    //   // padding: const EdgeInsets.all(0.0),
+                    //   padding: const EdgeInsets.only(
+                    //       left: 10.0, right: 10.0, top: 0, bottom: 0),
+                    //   decoration: BoxDecoration(
+                    //       border: Border.all(color: Colors.grey),
+                    //       borderRadius: BorderRadius.circular(12)),
+                    //   child: DropdownButton<String>(
+                    //     value: genderStatus,
+                    //     //elevation: 5,
+                    //     // style: TextStyle(color: Colors.black),
 
-                        hint: const Text('Select Gender'),
-                        dropdownColor: Colors.white,
-                        icon: const Icon(Icons.arrow_drop_down),
-                        iconSize: 36,
-                        isExpanded: true,
-                        underline: const SizedBox(),
-                        style:
-                            const TextStyle(color: Colors.black, fontSize: 15),
+                    //     hint: const Text('Select Gender'),
+                    //     dropdownColor: Colors.white,
+                    //     icon: const Icon(Icons.arrow_drop_down),
+                    //     iconSize: 36,
+                    //     isExpanded: true,
+                    //     underline: const SizedBox(),
+                    //     style:
+                    //         const TextStyle(color: Colors.black, fontSize: 15),
 
-                        items: <String>[
-                          'male',
-                          'female',
-                        ].map<DropdownMenuItem<String>>((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(value),
-                          );
-                        }).toList(),
+                    //     items: <String>[
+                    //       'male',
+                    //       'female',
+                    //     ].map<DropdownMenuItem<String>>((String value) {
+                    //       return DropdownMenuItem<String>(
+                    //         value: value,
+                    //         child: Text(value),
+                    //       );
+                    //     }).toList(),
 
-                        onChanged: (String? value) {
-                          print(value);
-                          // var v = '0';
-                          // if (value == 'Revenue') {
-                          //   v = '1';
-                          // }
-                          setState(() {
-                            genderStatus = value;
-                            // _visible_tag = v;
-                          });
-                        },
-                      ),
-                    ),
+                    //     onChanged: (String? value) {
+                    //       print(value);
+                    //       // var v = '0';
+                    //       // if (value == 'Revenue') {
+                    //       //   v = '1';
+                    //       // }
+                    //       setState(() {
+                    //         genderStatus = value;
+                    //         // _visible_tag = v;
+                    //       });
+                    //     },
+                    //   ),
+                    // ),
 
-                    const SizedBox(
-                      height: 30,
-                    ),
+                    // const SizedBox(
+                    //   height: 30,
+                    // ),
 
                     Container(
                         child: FutureBuilder<List<Goal_Items>>(
