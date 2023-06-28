@@ -612,41 +612,47 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Row(
                       children: [
-                        Expanded(
-                          // child: SfRadialGauge(
+                        // Expanded(
+                        //   // child: SfRadialGauge(
 
-                          //   axes: <RadialAxis>[
-                          //     RadialAxis(
-                          //       minimum: 0,
-                          //       maximum: 100,
-                          //       showLabels: false,
-                          //       showAxisLine: false,
-                          //         ranges: <GaugeRange>[
-                          //           GaugeRange(startValue: 0, endValue: 25, color:Colors.green),
-                          //           GaugeRange(startValue: 25,endValue: 75,color: Colors.orange),
-                          //           GaugeRange(startValue: 75,endValue: 100,color: Colors.red)],
-                          //         pointers: <GaugePointer>[
-                          //           NeedlePointer(value: 90)],
-                          //         annotations: <GaugeAnnotation>[
-                          //           GaugeAnnotation(widget: Container(child:
-                          //           Text('90.0',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
-                          //               angle: 90, positionFactor: 0.5
-                          //           )]
-                          //     )]),
+                        //   //   axes: <RadialAxis>[
+                        //   //     RadialAxis(
+                        //   //       minimum: 0,
+                        //   //       maximum: 100,
+                        //   //       showLabels: false,
+                        //   //       showAxisLine: false,
+                        //   //         ranges: <GaugeRange>[
+                        //   //           GaugeRange(startValue: 0, endValue: 25, color:Colors.green),
+                        //   //           GaugeRange(startValue: 25,endValue: 75,color: Colors.orange),
+                        //   //           GaugeRange(startValue: 75,endValue: 100,color: Colors.red)],
+                        //   //         pointers: <GaugePointer>[
+                        //   //           NeedlePointer(value: 90)],
+                        //   //         annotations: <GaugeAnnotation>[
+                        //   //           GaugeAnnotation(widget: Container(child:
+                        //   //           Text('90.0',style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold))),
+                        //   //               angle: 90, positionFactor: 0.5
+                        //   //           )]
+                        //   //     )]),
 
-                          child: CircularPercentIndicator(
-                            radius: 70.0,
-                            lineWidth: 13.0,
-                            animation: true,
-                            percent: 0.7,
-                            center: Text(
-                              "70.0%",
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold, fontSize: 20.0),
-                            ),
-                            circularStrokeCap: CircularStrokeCap.round,
-                            progressColor: Colors.purple,
-                          ),
+                        //   child: CircularPercentIndicator(
+                        //     radius: 70.0,
+                        //     lineWidth: 13.0,
+                        //     animation: true,
+                        //     percent: 0.7,
+                        //     center: Text(
+                        //       "70.0%",
+                        //       style: TextStyle(
+                        //           fontWeight: FontWeight.bold, fontSize: 20.0),
+                        //     ),
+                        //     circularStrokeCap: CircularStrokeCap.round,
+                        //     progressColor: Colors.purple,
+                        //   ),
+                        // ),
+
+                        Image.asset(
+                          'assets/body.png',
+                          width: 200, // Specify the desired width
+                          height: 150, // Specify the desired height
                         ),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:calorie_calculator/utils/constant.dart';
 import 'package:flutter/material.dart';
 
@@ -7,15 +9,49 @@ class SingleExerciseScreen extends StatefulWidget {
   const SingleExerciseScreen(
     this.name,
     this.image,
-    
   );
 
-  
   @override
   State<SingleExerciseScreen> createState() => _SingleExerciseScreenState();
 }
 
 class _SingleExerciseScreenState extends State<SingleExerciseScreen> {
+  int count = 20; // Initial count value
+  Timer? timer;
+
+  void startCountdown() {
+    timer = Timer.periodic(Duration(seconds: 1), (Timer t) {
+      setState(() {
+        if (count > 0) {
+          count--; // Decrement the count by 1
+        } else {
+          timer?.cancel(); // Stop the timer when count reaches zero
+        }
+      });
+    });
+  }
+
+  void restartCountdown() {
+    setState(() {
+      count = 20; // Reset the count to the initial value
+    });
+    startCountdown(); // Start the countdown again
+  }
+
+
+  void stopCountdown() {
+    timer?.cancel(); // Stop the timer and reset the count
+    setState(() {
+      count = 10; // Reset the count to the initial value
+    });
+  }
+
+  @override
+  void dispose() {
+    timer?.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +62,6 @@ class _SingleExerciseScreenState extends State<SingleExerciseScreen> {
         backgroundColor: Colors.white,
         foregroundColor: Colors.black,
       ),
-
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -42,11 +77,9 @@ class _SingleExerciseScreenState extends State<SingleExerciseScreen> {
             height: 300.0,
             width: 300.0,
           ),
-
           SizedBox(
             height: 30,
           ),
-
           Text(
             widget.name,
             textAlign: TextAlign.left,
@@ -55,45 +88,72 @@ class _SingleExerciseScreenState extends State<SingleExerciseScreen> {
             softWrap: true,
             overflow: TextOverflow.ellipsis,
           ),
-
           SizedBox(
             height: 30,
           ),
-
           Text(
-            '20 seconds',
+            '$count' + ' seconds',
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
-          
           ),
-
           SizedBox(
             height: 30,
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              MaterialButton(
+                elevation: 0,
+                color: Colors.green,
+                height: 50,
+                // minWidth: 100,
+                shape:
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                onPressed: () {
+                  startCountdown();
 
-          MaterialButton(
-            elevation: 0,
-            color: Colors.green,
-            height: 50,
-            minWidth: 500,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-            onPressed: () {
-              
-              // _login();
-              // Navigator.push(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => ProfileFormScreen(),
-              //   ),
-              // );
-            },
-            child: const Text(
-              'Start Exercise',
-              style: TextStyle(color: Colors.white),
-            ),
+                  // _login();
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ProfileFormScreen(),
+                  //   ),
+                  // );
+                },
+                child: const Text(
+                  'Start Exercise',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+
+              SizedBox(width: 10,),
+
+               MaterialButton(
+                elevation: 0,
+                color: Colors.orange,
+                height: 50,
+                // minWidth: 100,
+                shape:
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                onPressed: () {
+                  restartCountdown();
+
+                  // _login();
+                  // Navigator.push(
+                  //   context,
+                  //   MaterialPageRoute(
+                  //     builder: (context) => ProfileFormScreen(),
+                  //   ),
+                  // );
+                },
+                child: const Text(
+                  'Restart Exercise',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
           ),
         ],
       ),

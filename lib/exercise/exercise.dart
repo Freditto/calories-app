@@ -26,7 +26,7 @@ class _ExersiceScreenState extends State<ExersiceScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            makeItem(name: "Chiayi City International Band Festival",image: 'assets/1.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Leg Pull ups",image: 'assets/1.gif', date: 17, month: "JAN", time: "12:00"),
       
             makeItem(name: "Bicycle Crunches",image: 'assets/2.gif', date: 17, month: "JAN", time: "12:00"),
       

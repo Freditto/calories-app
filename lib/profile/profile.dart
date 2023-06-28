@@ -175,26 +175,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
 
-              const SizedBox(height: 20.0),
-
-              InkWell(
-                onTap: () {
-                  // print(profileData['id'].runtimeType);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => UpdateProfileFormScreen(
-                              profile: profileData['id'],
-                              callback: _updateState)));
-                },
-                child: Text(
-                  "Update profile",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 14.0,
-                  ),
-                ),
-              ),
+             
 
               const SizedBox(height: 20.0),
 
@@ -213,10 +194,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
               const SizedBox(height: 30.0),
 
-              CustomListTile(
-                "History",
-                Icons.history,
-                Icons.keyboard_arrow_right_outlined,
+              InkWell(
+
+                onTap: () {
+                   Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => UpdateProfileFormScreen(
+                              profile: profileData['id'],
+                              callback: _updateState)));
+                  
+                },
+                child: CustomListTile(
+                  "Update profile",
+                  Icons.edit,
+                  Icons.keyboard_arrow_right_outlined,
+                ),
               ),
               CustomListTile(
                 "Notification",
