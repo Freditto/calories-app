@@ -26,8 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     checkLoginStatus();
     _getUserInfo();
-    // fetchFood(context);
-    // listenNotifications();
 
     super.initState();
   }
@@ -68,8 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
       profileData = profile;
     });
 
-    // print(profileData);
-
     recommendationCalories(context);
     recommendationExercise(context);
     todayCalories_API(context);
@@ -77,18 +73,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   setPageState() {
-    print('________');
-    // setState(() {});
-    // viewTodayFood_API(context);
-    // fetchFood(context);
-    //listenNotifications();
-    // recommendationCalories(context);
-    // recommendationExercise(context);
-    // todayCalories_API(context);R
     setState(() {});
   }
 
-  // List<String> brealFastMeals = [];
   List<String> todayFastMeals() {
     List<String> data = [];
     for (var d in todayFood) {
@@ -115,23 +102,9 @@ class _HomeScreenState extends State<HomeScreen> {
   // ];
 
   List<String> selectedReportList = [];
-  var todayCall = {'total_calories': ''};
+  Map<String, String> todayCall = {'total_calories': ''};
 
   _showReportDialog(String data) {
-    // return StatefulBuilder(builder: (context, setState) {
-    //   return AlertDialog(
-    //     content: Text(data),
-    //     title: Text('Stateful Dialog'),
-    //     actions: <Widget>[
-    //       InkWell(
-    //         child: Text('OK   '),
-    //         onTap: () {
-
-    //         },
-    //       ),
-    //     ],
-    //   );
-    // });
     showDialog(
         context: context,
         builder: (BuildContext context) {
@@ -156,27 +129,6 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  _showFoodBotomSheet() {
-    showModalBottomSheet<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return Container(
-          height: 200,
-          child: DropdownSearch<String>.multiSelection(
-            items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-            popupProps: PopupPropsMultiSelection.menu(
-              showSelectedItems: true,
-              showSearchBox: true,
-              // disabledItemFn: (String s) => s.startsWith('I'),
-            ),
-            onChanged: print,
-            selectedItems: ["Brazil"],
-          ),
-        );
-      },
-    );
-  }
-
   _showFoodDialog() {
     showDialog(
         context: context,
@@ -194,33 +146,6 @@ class _HomeScreenState extends State<HomeScreen> {
               onChanged: print,
               selectedItems: ["Brazil"],
             ),
-
-            // DropdownSearch<String>(
-            //   popupProps: PopupProps.menu(
-            //     showSelectedItems: true,
-            //     showSearchBox: true,
-            //     disabledItemFn: (String s) => s.startsWith('I'),
-            //   ),
-            //   items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-            //   dropdownDecoratorProps: DropDownDecoratorProps(
-            //     dropdownSearchDecoration: InputDecoration(
-            //       labelText: "Menu mode",
-            //       hintText: "country in menu mode",
-            //     ),
-            //   ),
-            //   onChanged: print,
-            //   selectedItem: "Brazil",
-            // ),
-
-// DropdownSearch<String>.multiSelection(
-//     items: ["Brazil", "Italia (Disabled)", "Tunisia", 'Canada'],
-//     popupProps: PopupPropsMultiSelection.menu(
-//         showSelectedItems: true,
-//         disabledItemFn: (String s) => s.startsWith('I'),
-//     ),
-//     onChanged: print,
-//     selectedItems: ["Brazil"],
-// )
             actions: <Widget>[
               TextButton(
                 child: Text("Report"),
@@ -231,45 +156,19 @@ class _HomeScreenState extends State<HomeScreen> {
         });
   }
 
-  // List<String> foodItems = [];
-
   Future<List<String>> fetchFood(context) async {
     print(" Inside List of food function");
 
     var res = await CallApi().authenticatedGetRequest('food');
 
-    // print(res);
     if (res != null) {
       print("==========");
-      // print(res.body);
       List<String> foodItems = [];
       var b = json.decode(res.body);
       print(b.runtimeType);
       for (var data in b) {
-        // print('----');
         foodItems.add(data['name']);
       }
-      print(foodItems);
-      // setState(() {
-      //   foodItems = d;
-      // });
-      // var aptitudeResultItensJson = json.decode(res.body);
-
-      // List<AptituteResult_Items> aptituderesultItems = [];
-
-      // for (var f in aptitudeResultItensJson) {
-      //   AptituteResult_Items requestlistItems = AptituteResult_Items(
-      //     f["job"].toString(),
-      //     f["company"].toString(),
-      //     f["percent"].toString(),
-      //     f["status"].toString(),
-
-      //     // f["longitude"].toString(),
-      //     // f['is_received'].toString(),
-      //   );
-      //   aptituderesultItems.add(requestlistItems);
-      // }
-      // print(aptituderesultItems.length);
 
       return foodItems;
     } else {
@@ -282,17 +181,11 @@ class _HomeScreenState extends State<HomeScreen> {
   recommendationExercise(context) async {
     print(" Inside Exercise function");
 
-    var res = await CallApi().authenticatedGetRequest(
-        // 'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
-        'recommendation-exercise?bmi=2');
+    var res = await CallApi()
+        .authenticatedGetRequest('recommendation-exercise?bmi=2');
 
-    // print(res);
     if (res != null) {
-      // print(res.body);
-
       var exerciseRecommended = json.decode(res.body)[0];
-      // print('object----****');
-      // print(exerciseRecommended);
       setState(() {
         recommendedExercise = exerciseRecommended;
       });
@@ -317,18 +210,19 @@ class _HomeScreenState extends State<HomeScreen> {
 
   recommendationCalories(context) async {
     print(" Inside Callories function");
-
+    print(profileData);
+    // print(userData['profile']['baseline_activity_id']);
+    // print(userData['profile']['goal_id']);
+    // print(userData['profile']['bmi_id']);
     var res = await CallApi().authenticatedGetRequest(
-        'recommendation-calories?baseline_activity=${userData['profile']['baseline_activity_id']}&goal=${userData['profile']['goal_id']}&bmi=${userData['profile']['bmi_id']}');
-    // 'recommendation-calories?baseline_activity=1&goal=1&bmi=1');
-
+        'recommendation-calories?baseline_activity=${profileData['baseline_activity_id']}&goal=${profileData['goal_id']}&bmi=${profileData['bmi_id']}');
+print("**");
     print(res);
+    print("**");
     if (res != null) {
       print(res.body);
 
       var calloriesRecommended = json.decode(res.body)[0];
-      // print('object----');
-      // print(calloriesRecommended);
       setState(() {
         recommendedCalories = calloriesRecommended;
       });
@@ -355,11 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     var res = await CallApi().authenticatedPostRequest(data, 'daily-food');
     if (res == null) {
-      // setState(() {
-      //   _isLoading = false;
-      //   // _not_found = true;
-      // });
-      // showSnack(context, 'No Network!');
     } else {
       var body = json.decode(res!.body);
       print(body);
@@ -372,13 +261,7 @@ class _HomeScreenState extends State<HomeScreen> {
           setState(() {});
         }
       } else if (res.statusCode == 400) {
-        // print('hhh');
         showSnack(context, 'Fail to add today foods!');
-
-        // setState(() {
-        //   _isLoading = false;
-        //   _not_found = true;
-        // });
       } else {}
     }
 
@@ -394,37 +277,22 @@ class _HomeScreenState extends State<HomeScreen> {
     print(day);
     var res = await CallApi().authenticatedGetRequest(
         'delete-food-daily-meal-record?user=${userData['id']}&goal=goal=${profileData['goal_id']}&day=${day}');
-    // print("mimi");
     print(res);
     if (res != null) {
       print(res.body);
 
       var body = json.decode(res.body);
-      // print('object-==---');
-      // print(x);
-      // setState(() {
-      //   todayFood = [];
-      //   // recommendedCalories = calloriesRecommended;
-      // });
-      // print(todayFood);
-      // print("today === ===");
       if (res.statusCode == 200) {
         if (body['delete']) {
           showSnack(context, 'Successful delete today foods!');
-          setState(() {
-            todayFood = [];
-          });
+          todayFood = [];
+          todayCall['total_calories'] == "";
+          setState(() {});
         } else {
           showSnack(context, 'Fail to delete today foods!');
         }
       } else if (res.statusCode == 400) {
-        // print('hhh');
         showSnack(context, 'Fail to delete today foods!');
-
-        // setState(() {
-        //   _isLoading = false;
-        //   _not_found = true;
-        // });
       } else {}
 
       return [];
@@ -468,21 +336,22 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   todayCalories_API(context) async {
-    print(" Inside Today Callories __________________");
+    // print(" Inside Today Callories __________________");
     // print(userData);
     var res = await CallApi().authenticatedGetRequest('daily-food-get/' +
         userData['id'].toString() +
         '/' +
         DateFormat('EEEE').format(DateTime.now()));
-    print(" Inside Today Callories __________________");
     // var res = 2;
     print(res);
     if (res != null) {
       print(res.body);
-
+      // print(" Inside Today Callories __________________");
+      print("****");
       var todayCalories = json.decode(res.body);
       setState(() {
-        todayCall = todayCalories;
+        todayCall['total_calories'] =
+            todayCalories['total_calories'].toString();
       });
       // print('object----');
       // print(calloriesRecommended);
@@ -705,7 +574,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         )
                                       : Text(
                                           profileData['height'].toString() +
-                                              ' feet',
+                                              ' centimeter',
                                           style: TextStyle(fontSize: 14),
                                         ),
                                 ],
