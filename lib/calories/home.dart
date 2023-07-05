@@ -365,6 +365,13 @@ print("**");
     }
   }
 
+  final List<Category> categories = [
+    Category('Category 1', ['Item 1', 'Item 2', 'Item 3']),
+    Category('Category 2', ['Item 4', 'Item 5']),
+    Category('Category 3', ['Item 6', 'Item 7', 'Item 8', 'Item 9']),
+  ];
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -1255,4 +1262,12 @@ class FoodItems {
   final String name;
 
   FoodItems({required this.id, required this.name});
+}
+
+
+class Category {
+  final String name;
+  final List<String> items;
+
+  Category(this.name, this.items);
 }
