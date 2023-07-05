@@ -16,7 +16,7 @@ class SingleExerciseScreen extends StatefulWidget {
 }
 
 class _SingleExerciseScreenState extends State<SingleExerciseScreen> {
-  int count = 20; // Initial count value
+  int count = 60; // Initial count value
   Timer? timer;
 
   void startCountdown() {
@@ -27,13 +27,15 @@ class _SingleExerciseScreenState extends State<SingleExerciseScreen> {
         } else {
           timer?.cancel(); // Stop the timer when count reaches zero
         }
+        
       });
     });
   }
 
   void restartCountdown() {
+    timer?.cancel(); // Stop the timer and reset the count
     setState(() {
-      count = 20; // Reset the count to the initial value
+      count = 60; // Reset the count to the initial value
     });
     startCountdown(); // Start the countdown again
   }
