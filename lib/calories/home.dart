@@ -1230,20 +1230,53 @@ class _HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+
                       Text(
-                        'Recommended Food',
+                        'Recommendation',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(
                         height: 10,
                       ),
-                      randomElements.isEmpty == false
-                          ? Text(
-                              '${randomElements[0]} and ${randomElements[1]}',
-                              style: TextStyle(fontSize: 18),
-                            )
-                          : Text("")
+
+                      profileData == null
+                      ? Text(
+                          '',
+                          style: TextStyle(fontSize: 18),
+                        )
+
+                      : profileData['bmi_name'].toString() == "Underweight" ?  
+                      Text(
+                          'try to avoid foods with a lot of added sugar, fat and salt, like cakes, takeaway foods and sugary drinks',
+                          style: TextStyle(fontSize: 18),
+                        ) 
+                      : profileData['bmi_name'].toString() == "Normail Weight" ? 
+                      Text(
+                        'Emphasizes fruits, vegetables, whole grains, and fat-free or low-fat milk and milk products. Includes a variety of protein foods such as seafood, lean meats and poultry, eggs, legumes (beans and peas), soy products, nuts, and seeds',
+                          style: TextStyle(fontSize: 18),
+                        ) 
+                      
+                      : profileData['bmi_name'].toString() == "Over weight" ? 
+                      Text(
+                        'Choose minimally processed, whole foods-whole grains, vegetables, fruits, nuts, healthful sources of protein (fish, poultry, beans), and plant oils',
+                          style: TextStyle(fontSize: 18),
+                        ) 
+                      
+                      : Text(''),
+
+
+
+
+
+
+                      
+                      // randomElements.isEmpty == false
+                      //     ? Text(
+                      //         '${randomElements[0]} and ${randomElements[1]}',
+                      //         style: TextStyle(fontSize: 18),
+                      //       )
+                      //     : Text("")
                     ],
                   ),
                 ),

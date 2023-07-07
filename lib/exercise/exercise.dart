@@ -26,17 +26,17 @@ class _ExersiceScreenState extends State<ExersiceScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            makeItem(name: "Leg Pull ups",image: 'assets/1.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Leg Pull ups",image: 'assets/1.gif', month: "JAN", time: "12:00"),
       
-            makeItem(name: "Bicycle Crunches",image: 'assets/2.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Bicycle Crunches",image: 'assets/2.gif',  month: "JAN", time: "12:00"),
       
-            makeItem(name: "Leg Raise",image: 'assets/3.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Leg Raise",image: 'assets/3.gif',  month: "JAN", time: "12:00"),
       
-            makeItem(name: "Mountain Climber",image: 'assets/4.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Mountain Climber",image: 'assets/4.gif',  month: "JAN", time: "12:00"),
       
-            makeItem(name: "Crunch",image: 'assets/5.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Crunch",image: 'assets/5.gif',  month: "JAN", time: "12:00"),
       
-            makeItem(name: "Front Lunges",image: 'assets/6.gif', date: 17, month: "JAN", time: "12:00"),
+            makeItem(name: "Front Lunges",image: 'assets/6.gif',  month: "JAN", time: "12:00"),
           ],
         ),
       ),
@@ -46,7 +46,7 @@ class _ExersiceScreenState extends State<ExersiceScreen> {
   
 
 
-    Widget makeItem({name, image, date, month, time}) {
+    Widget makeItem({name, image, month, time}) {
     final mediaQuery = MediaQuery.of(context);
     return GestureDetector(
       onTap: () {
@@ -101,16 +101,9 @@ class _ExersiceScreenState extends State<ExersiceScreen> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        date.toString(),
-                        style: kLabelText,
-                      ),
+                      
                       const SizedBox(width: 5.0),
-                      const Icon(
-                        Icons.circle,
-                        size: 10.0,
-                        color: Colors.black87,
-                      ),
+                     
                       const SizedBox(width: 5.0),
                       // Text(
                       //   '$read min',
