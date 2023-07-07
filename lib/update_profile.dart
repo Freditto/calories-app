@@ -166,6 +166,7 @@ class _UpdateProfileFormScreenState extends State<UpdateProfileFormScreen> {
       // showSnack(context, 'No Network!');
     } else {
       var body = json.decode(res!.body);
+      print("************");
       print(body);
 
       if (res.statusCode == 200) {
@@ -180,15 +181,18 @@ class _UpdateProfileFormScreenState extends State<UpdateProfileFormScreen> {
         //   _isLoading = false;
         // });
         if (body['save']) {
+          SharedPreferences localStorage =
+              await SharedPreferences.getInstance();
+
+          localStorage.remove('profile');
+
           widget.callback;
           Navigator.pop(context);
           showSnack(context, 'Successfully Updating profile!');
-        }
-        else{
+        } else {
           Navigator.pop(context);
 
-        showSnack(context, 'Fail to update profile!');
-
+          showSnack(context, 'Fail to update profile!');
         }
 
         // SharedPreferences preferences = await SharedPreferences.getInstance();

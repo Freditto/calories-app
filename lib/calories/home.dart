@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 
 import 'package:calorie_calculator/api/api.dart';
 import 'package:calorie_calculator/auth.dart';
@@ -54,22 +55,35 @@ class _HomeScreenState extends State<HomeScreen> {
       userData = user;
     });
 
-    print(userData);
     _getProfileInfo();
   }
 
   void _getProfileInfo() async {
     SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var profileJson = localStorage.getString('profile');
-    var profile = json.decode(profileJson!);
-    setState(() {
-      profileData = profile;
-    });
+    if (localStorage.getString('profile') == null) {
+      var res = await CallApi()
+          .authenticatedGetRequest('get-updated-profile/${userData['id']}');
+      if (res != null) {
+        localStorage.setString("profile", res.body);
+        var newProfile = localStorage.getString('profile');
+        setState(() {
+          profileData = json.decode(newProfile!);
+        });
+      }
+    } else {
+      var profileJson = localStorage.getString('profile');
+      var profile = json.decode(profileJson!);
+      setState(() {
+        profileData = profile;
+      });
+    }
 
     recommendationCalories(context);
     recommendationExercise(context);
     todayCalories_API(context);
     viewTodayFood_API(context);
+    randomize();
+    randomizeE();
   }
 
   setPageState() {
@@ -83,6 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     return data;
   }
+
   // [
   //   "Not relevant",
   //   "Illegal",
@@ -100,6 +115,100 @@ class _HomeScreenState extends State<HomeScreen> {
   //   "Offensive",
   //   "Uncivil"
   // ];
+  var exerciseRandomize = [
+    "Leg Pull ups",
+    "Bicycle Crunches",
+    "Leg Raise",
+    "Mountain Climber",
+    "Crunch",
+    "Front Lunges"
+  ];
+
+  // var randomFood = [];
+  // final list = ['a', 'b', 'c', 'd', 'e'];
+  final random = Random();
+  final randomElementsExercise = <String>[];
+
+  void randomizeE() {
+    print("*******************");
+    print(randomElementsExercise);
+    while (randomElementsExercise.length < 2) {
+      final randomIndex = random.nextInt(exerciseRandomize.length);
+      final randomElement = exerciseRandomize[randomIndex];
+
+      if (!randomElementsExercise.contains(randomElement)) {
+        randomElementsExercise.add(randomElement);
+      }
+    }
+  }
+
+  var foodToRandomize = [
+    "Noodle",
+    "Soup",
+    "Pizza",
+    "Rice",
+    "Roasted meat",
+    "Roasted fish",
+    "Fried fish",
+    "Fried chicken",
+    "Banana",
+    "Broccoli",
+    "Salmon",
+    "Brown Rice",
+    "Avocado",
+    "Sweet Potato",
+    "Almonds",
+    "Black Beans",
+    "Spinach",
+    "Eggs",
+    "Greek Yogurt",
+    "Oatmeal",
+    "Rice",
+    "Ugali",
+    "Dough",
+    "Fried fish",
+    "Fried chicken",
+    "Beans",
+    "Coconut peas",
+    "Roasted fish",
+    "Roasted meat",
+    "Banana meat",
+    "Spinach",
+    "Pilau",
+    "Chips",
+    "Egg chop",
+    "Fried bread",
+    "Chapati",
+    "Sausage",
+    "Frying eggs",
+    "Boiled egg",
+    "Sponge cake",
+    "Donut",
+    "Boiled cassava",
+    "Coffee",
+    "Tea",
+    "Milk",
+    "Smoothie",
+    "Yogurt",
+    "Coffee with milk"
+  ];
+  var randomFood = [];
+  final list = ['a', 'b', 'c', 'd', 'e'];
+  // final random = Random();
+  final randomElements = <String>[];
+
+  void randomize() {
+    print("*******************");
+    print(randomElements);
+    while (randomElements.length < 2) {
+      final randomIndex = random.nextInt(foodToRandomize.length);
+      final randomElement = foodToRandomize[randomIndex];
+
+      if (!randomElements.contains(randomElement)) {
+        randomElements.add(randomElement);
+      }
+    }
+  }
 
   List<String> selectedReportList = [];
   Map<String, String> todayCall = {'total_calories': ''};
@@ -216,7 +325,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // print(userData['profile']['bmi_id']);
     var res = await CallApi().authenticatedGetRequest(
         'recommendation-calories?baseline_activity=${profileData['baseline_activity_id']}&goal=${profileData['goal_id']}&bmi=${profileData['bmi_id']}');
-print("**");
+    print("**");
     print(res);
     print("**");
     if (res != null) {
@@ -370,7 +479,6 @@ print("**");
     Category('Category 2', ['Item 4', 'Item 5']),
     Category('Category 3', ['Item 6', 'Item 7', 'Item 8', 'Item 9']),
   ];
-
 
   @override
   Widget build(BuildContext context) {
@@ -848,13 +956,13 @@ print("**");
                     SizedBox(
                       height: 16,
                     ),
-                    profileData == null
+                    randomElementsExercise.isEmpty == true
                         ? Text(
                             '',
                             style: TextStyle(fontSize: 14),
                           )
                         : Text(
-                            recommendedExercise['name'].toString(),
+                            '${randomElementsExercise[0]} and ${randomElementsExercise[1]}',
                             style: TextStyle(fontSize: 14),
                           ),
                   ],
@@ -1117,7 +1225,7 @@ print("**");
                           offset: const Offset(0, 10))
                     ],
                     borderRadius: BorderRadius.circular(30)),
-                child: const Padding(
+                child: Padding(
                   padding: EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -1130,10 +1238,12 @@ print("**");
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                        'Average',
-                        style: TextStyle(fontSize: 18),
-                      ),
+                      randomElements.isEmpty == false
+                          ? Text(
+                              '${randomElements[0]} and ${randomElements[1]}',
+                              style: TextStyle(fontSize: 18),
+                            )
+                          : Text("")
                     ],
                   ),
                 ),
@@ -1263,7 +1373,6 @@ class FoodItems {
 
   FoodItems({required this.id, required this.name});
 }
-
 
 class Category {
   final String name;
