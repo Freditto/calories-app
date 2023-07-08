@@ -136,10 +136,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             children: [
               const SizedBox(height: 30.0),
-              const CircleAvatar(
-                backgroundImage: NetworkImage(
-                    "https://free2music.com/images/singer/2019/02/10/troye-sivan_2.jpg"),
-                radius: 50.0,
+              Container(
+                height: 100,
+                width: 100,
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(15),
+                    color: Colors.blueAccent,
+                    image: const DecorationImage(
+                        image: AssetImage("assets/userx.jpg"),
+                        fit: BoxFit.cover)),
               ),
               const SizedBox(height: 20.0),
 
@@ -211,16 +216,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Icons.keyboard_arrow_right_outlined,
                 ),
               ),
-              CustomListTile(
-                "Notification",
-                Icons.notifications_outlined,
-                Icons.keyboard_arrow_right_outlined,
-              ),
-              CustomListTile(
-                "Setting",
-                Icons.settings,
-                Icons.keyboard_arrow_right_outlined,
-              ),
+              // CustomListTile(
+              //   "Notification",
+              //   Icons.notifications_outlined,
+              //   Icons.keyboard_arrow_right_outlined,
+              // ),
+              // CustomListTile(
+              //   "Setting",
+              //   Icons.settings,
+              //   Icons.keyboard_arrow_right_outlined,
+              // ),
               // SwitchListTile(
               //   value: _darkMode,
               //   title: Text(
